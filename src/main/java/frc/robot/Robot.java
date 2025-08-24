@@ -21,21 +21,25 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private SparkMax motor;
-  private SparkMaxConfig motorConfig;
-  private SparkLimitSwitch forwardLimitSwitch;
-  private SparkLimitSwitch reverseLimitSwitch;
-  private RelativeEncoder encoder;
-  private SparkClosedLoopController closedLoop;
 
-  private Joystick joystick;
-  private double targetPosition = 0.0;
+  // // Elevator
+  // private SparkMax motor;
+  // private SparkMaxConfig motorConfig;
+  // private SparkLimitSwitch forwardLimitSwitch;
+  // private SparkLimitSwitch reverseLimitSwitch;
+  // private RelativeEncoder encoder;
+  // private SparkClosedLoopController closedLoop;
+
+  // private Joystick joystick;
+  // private double targetPosition = 0.0;
 
   // Store PID values here
   private double kP = 0.05;
@@ -52,46 +56,45 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    motor = new SparkMax(1, MotorType.kBrushless);
-    forwardLimitSwitch = motor.getForwardLimitSwitch();
-    reverseLimitSwitch = motor.getReverseLimitSwitch();
-    encoder = motor.getEncoder();
-    closedLoop = motor.getClosedLoopController();
+    // motor = new SparkMax(1, MotorType.kBrushless);
+    // forwardLimitSwitch = motor.getForwardLimitSwitch();
+    // reverseLimitSwitch = motor.getReverseLimitSwitch();
+    // encoder = motor.getEncoder();
+    // closedLoop = motor.getClosedLoopController();
 
-    // Motor configuration
-    motorConfig = new SparkMaxConfig();
-    motorConfig.idleMode(IdleMode.kBrake);
+    // // Motor configuration
+    // motorConfig = new SparkMaxConfig();
+    // motorConfig.idleMode(IdleMode.kBrake);
 
-    // Limit switches
-    motorConfig.limitSwitch
-        .forwardLimitSwitchType(Type.kNormallyOpen)
-        .forwardLimitSwitchEnabled(true)
-        .reverseLimitSwitchType(Type.kNormallyOpen)
-        .reverseLimitSwitchEnabled(true);
+    // // Limit switches
+    // motorConfig.limitSwitch
+    //     .forwardLimitSwitchType(Type.kNormallyOpen)
+    //     .forwardLimitSwitchEnabled(true)
+    //     .reverseLimitSwitchType(Type.kNormallyOpen)
+    //     .reverseLimitSwitchEnabled(true);
 
-    // Soft limits
-    motorConfig.softLimit
-        .forwardSoftLimit(500)
-        .forwardSoftLimitEnabled(true)
-        .reverseSoftLimit(-500)
-        .reverseSoftLimitEnabled(true);
+    // // Soft limits
+    // motorConfig.softLimit
+    //     .forwardSoftLimit(500)
+    //     .forwardSoftLimitEnabled(true)
+    //     .reverseSoftLimit(-500)
+    //     .reverseSoftLimitEnabled(true);
 
-    // PID configuration
-    pidConfig = motorConfig.closedLoop;
-    pidConfig.p(kP);
-    pidConfig.i(kI);
-    pidConfig.d(kD);
-    pidConfig.outputRange(-0.3, 0.3);
+    // // PID configuration
+    // pidConfig = motorConfig.closedLoop;
+    // pidConfig.p(kP);
+    // pidConfig.i(kI);
+    // pidConfig.d(kD);
+    // pidConfig.outputRange(-0.3, 0.3);
 
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    // motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-    encoder.setPosition(0);
-    joystick = new Joystick(0);
+    // encoder.setPosition(0);
 
-    // Put initial PID values on SmartDashboard
-    SmartDashboard.putNumber("kP", kP);
-    SmartDashboard.putNumber("kI", kI);
-    SmartDashboard.putNumber("kD", kD);
+    // // Put initial PID values on SmartDashboard
+    // SmartDashboard.putNumber("kP", kP);
+    // SmartDashboard.putNumber("kI", kI);
+    // SmartDashboard.putNumber("kD", kD);
   }
 
   @Override
@@ -103,26 +106,27 @@ public class Robot extends TimedRobot {
       double newI = SmartDashboard.getNumber("kI", kI);
       double newD = SmartDashboard.getNumber("kD", kD);
 
-      if (newP != kP || newI != kI || newD != kD) {
-          kP = newP;
-          kI = newI;
-          kD = newD;
-          pidConfig.p(kP);
-          pidConfig.i(kI);
-          pidConfig.d(kD);
-          motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-      }
+      // if (newP != kP || newI != kI || newD != kD) {
+      //     kP = newP;
+      //     kI = newI;
+      //     kD = newD;
+      //     pidConfig.p(kP);
+      //     pidConfig.i(kI);
+      //     pidConfig.d(kD);
+      //     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+      // }
 
-      double position = encoder.getPosition();
-      double output = motor.getAppliedOutput();
+      // double position = encoder.getPosition();
+      // double output = motor.getAppliedOutput();
 
-      // Send values to SmartDashboard
-      SmartDashboard.putNumber("Elevator Position", position);
-      SmartDashboard.putNumber("Target Position", targetPosition);
-      SmartDashboard.putNumber("Motor Output", output);
-      SmartDashboard.putNumber("kP", kP);
-      SmartDashboard.putNumber("kI", kI);
-      SmartDashboard.putNumber("kD", kD);
+
+      // // Send values to SmartDashboard
+      // SmartDashboard.putNumber("Elevator Position", position);
+      // SmartDashboard.putNumber("Target Position", targetPosition);
+      // SmartDashboard.putNumber("Motor Output", output);
+      // SmartDashboard.putNumber("kP", kP);
+      // SmartDashboard.putNumber("kI", kI);
+      // SmartDashboard.putNumber("kD", kD);
   }
 
 
@@ -159,28 +163,28 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    int pov = joystick.getPOV(); // returns -1 if no D-Pad pressed
+    // int pov = joystick.getPOV(); // returns -1 if no D-Pad pressed
 
-    // Manual jogging with D-pad
-    if (pov == 0) { // UP
-      motor.set(0.2);
-    } else if (pov == 180) { // DOWN
-      motor.set(-0.2);
-    } else {
-      motor.set(0.0);
-    }
+    // // Manual jogging with D-pad
+    // if (pov == 0) { // UP
+    //   motor.set(0.2);
+    // } else if (pov == 180) { // DOWN
+    //   motor.set(-0.2);
+    // } else {
+    //   motor.set(0.0);
+    // }
 
-    // Button B (2) → Move up to 200 rotations
-    if (joystick.getRawButton(2)) {
-      targetPosition = 200.0;
-      closedLoop.setReference(targetPosition, SparkMax.ControlType.kPosition);
-    }
+    // // Button B (2) → Move up to 200 rotations
+    // if (joystick.getRawButton(2)) {
+    //   targetPosition = 200.0;
+    //   closedLoop.setReference(targetPosition, SparkMax.ControlType.kPosition);
+    // }
 
-    // Button A (1) → Move down to 0 rotations
-    if (joystick.getRawButton(1)) {
-      targetPosition = 0.0;
-      closedLoop.setReference(targetPosition, SparkMax.ControlType.kPosition);
-    }
+    // // Button A (1) → Move down to 0 rotations
+    // if (joystick.getRawButton(1)) {
+    //   targetPosition = 0.0;
+    //   closedLoop.setReference(targetPosition, SparkMax.ControlType.kPosition);
+    // }
   }
 
   @Override

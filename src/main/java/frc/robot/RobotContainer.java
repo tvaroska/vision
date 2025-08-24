@@ -10,16 +10,28 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
+
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.subsystems.Pneumatics;
+
 public class RobotContainer {
+
+    private final Pneumatics pneumatics = new Pneumatics();
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -38,9 +50,23 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+        
     }
 
     private void configureBindings() {
+
+        // Pneumatics bindings
+        // For CommandXboxController joystick = new CommandXboxController(0);
+
+        joystick.a().onTrue(new InstantCommand(() -> pneumatics.setForward()));
+        joystick.b().onTrue(new InstantCommand(() -> pneumatics.setReverse()));
+        joystick.x().onTrue(new InstantCommand(() -> pneumatics.setOff()));
+        joystick.start().onTrue(new InstantCommand(() -> pneumatics.enableCompressor()));
+        joystick.y().onTrue(new InstantCommand(() -> pneumatics.disableCompressor()));
+
+
+
+
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -59,7 +85,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // DOUBLE BOUND: joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
