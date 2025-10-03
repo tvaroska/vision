@@ -26,9 +26,8 @@ class SafetyMonitorTest {
 
   @AfterEach
   void teardown() {
-    if (safetyMonitor != null) {
-      safetyMonitor.close();
-    }
+    // Cleanup if needed
+    safetyMonitor = null;
   }
 
   @Test

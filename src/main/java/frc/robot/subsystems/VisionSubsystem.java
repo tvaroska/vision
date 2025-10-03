@@ -173,7 +173,6 @@ public class VisionSubsystem extends SubsystemBase {
     String prefix = "Vision/" + cameraName + "/";
     SmartDashboard.putBoolean(prefix + "Has Targets", result.hasTargets());
     SmartDashboard.putNumber(prefix + "Target Count", result.getTargets().size());
-    SmartDashboard.putNumber(prefix + "Latency (ms)", result.getLatencyMillis());
     SmartDashboard.putBoolean(prefix + "Connected", camera.isConnected());
 
     // Process vision measurement if we have targets

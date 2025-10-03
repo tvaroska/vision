@@ -63,15 +63,11 @@ public class FieldConfiguration {
    * @return AprilTagFieldLayout with all 16 tags
    */
   private static AprilTagFieldLayout getRealFieldLayout() {
-    try {
-      AprilTagFieldLayout layout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
-      DataLogManager.log("Loaded 2025 Reefscape field layout with " + layout.getTags().size() + " AprilTags");
-      return layout;
-    } catch (IOException e) {
-      DataLogManager.log("ERROR: Failed to load 2025 Reefscape field layout: " + e.getMessage());
-      // Return empty layout as fallback
-      return new AprilTagFieldLayout(new ArrayList<>(), 16.54, 8.21);
-    }
+    // Load the 2025 field layout
+    // Note: Field name may vary by WPILib version (k2025Reefscape, kDefaultField, etc.)
+    AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    DataLogManager.log("Loaded 2025 field layout with " + layout.getTags().size() + " AprilTags");
+    return layout;
   }
 
   /**

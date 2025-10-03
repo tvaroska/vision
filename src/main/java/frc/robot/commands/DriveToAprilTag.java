@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
 
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
